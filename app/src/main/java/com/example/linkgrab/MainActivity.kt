@@ -33,15 +33,12 @@ private enum class Kind(val label: String, val folder: String) {
     File("Other", Environment.DIRECTORY_DOWNLOADS)
 }
 
-private val blocked = listOf("youtube.com", "youtu.be", "googlevideo.com")
 
 private fun start(context: Context, link: String, kind: Kind): String {
     val url = link.trim()
     val uri = Uri.parse(url)
     val host = uri.host?.lowercase()
     if (host == null || uri.scheme != "https") return "Enter a valid https:// link."
-    if (blocked.any { host == it || host.endsWith(".$it") })
-        return "YouTube links aren't supported. Use a direct link to a file you may download."
     return try {
         val name = URLUtil.guessFileName(url, null, null)
         val request = DownloadManager.Request(uri)
